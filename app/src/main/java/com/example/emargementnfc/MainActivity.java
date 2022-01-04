@@ -1,8 +1,7 @@
 package com.example.emargementnfc;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,12 +16,12 @@ public class MainActivity extends AppCompatActivity {
         this.dbHandler = new DBMain(getApplicationContext());
     }
 
-    public void openScan(View view)	{
+    public void openScan(View view) {
         Intent settingsIntent = new Intent(this, ScanActivity.class);
         startActivity(settingsIntent);
     }
 
-    public void clearDB(View view)	{
+    public void clearDB(View view) {
         this.dbHandler.clearTable();
     }
 
