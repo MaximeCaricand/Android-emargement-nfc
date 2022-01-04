@@ -1,5 +1,6 @@
 package com.example.emargementnfc;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,15 +10,23 @@ import android.nfc.Tag;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 
 
 public class MainActivity extends AppCompatActivity {
     NfcAdapter adapter;
     PendingIntent mPendingIntent;
+    private EditText username;
+
+    DBMain dbHandler;
 
 
     @Override
@@ -74,30 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void nouvelleCarte(View v){
-        Intent intentGame = new Intent(this, NouvelleCarte.class);
-        startActivityForResult(intentGame,666);
-    }
-
-    public void onActivityResult(int code, int status, Intent res) {
-        super.onActivityResult(code, status, res);
-
-        /*switch (code){
-            case 666:
-                if(status == RESULT_OK){
-                    userName = res.getStringExtra("userName");
-                    prey = res.getStringExtra("prey");
-                    killer = res.getStringExtra("killer");
-                    score = res.getIntExtra("score",-1);
-                    date = res.getStringExtra("date");
-                    tvScore.setText("Last Killing Spree : " + score + " kills");
-                }
-                break;
-        }*/
-    }
-
-    public void carteExistante(View v){
-    }
 
     public void afficherMessage(String s) {
 
