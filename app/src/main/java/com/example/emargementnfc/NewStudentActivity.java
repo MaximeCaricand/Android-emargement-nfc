@@ -13,7 +13,6 @@ public class NewStudentActivity extends AppCompatActivity {
     private String name;
     private EditText nameInput;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
