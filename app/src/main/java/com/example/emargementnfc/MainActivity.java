@@ -71,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         getTagInfo(intent);
+    }
+
+    public void pdf(View v){
+        Intent pdfIntent = new Intent(MainActivity.this, PdfActivity.class);
+        startActivity(pdfIntent);
     }
 
     private void getTagInfo(Intent intent) {

@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="pdf"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/username"
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:hint="nom de l'étudiant" />
 
 
     <Button
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textFontWeight="100"
+        android:layout_marginTop="50dp"
         android:onClick="clearDB"
-        android:text="clear DB" />
+        android:text="clear DB"
+        android:textFontWeight="100" />
+
+    <Button
+        android:id="@+id/getPdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="pdf"
+        android:text="Import an exam" />
 
 </LinearLayout>
