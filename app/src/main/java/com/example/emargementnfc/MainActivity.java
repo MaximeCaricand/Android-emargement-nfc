@@ -21,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(settingsIntent);
     }
 
+    public void openExamSessions(View view) {
+        Intent settingsIntent = new Intent(this, ExamSessionActivity.class);
+        startActivity(settingsIntent);
+    }
+
     public void clearDB(View view) {
         this.dbHandler.clearTable();
     }

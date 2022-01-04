@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EmargementNFC">
         <activity
+            android:name=".CreateExamSessionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExamSessionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ScanActivity"
             android:exported="false" />
         <activity
