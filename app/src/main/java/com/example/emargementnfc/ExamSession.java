@@ -1,8 +1,5 @@
 package com.example.emargementnfc;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class ExamSession {
     private int id;
     private String name;

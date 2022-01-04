@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">EmargementNFC</string>
+    <!-- Main Activity -->
+    <string name="mainActivityTitle">!! Awesome NFC scan app !!</string>
+    <string name="scanButton">SCAN</string>
 
-    <!-- Nouvelle Carte activity -->
-    <string name="tvID"> Carte ID: </string>
-    <string name="tvNomPrenom"> Nom et Prénom: </string>
+    <!-- Scan Activity -->
+    <string name="scanActivityScan">SCAN</string>
+
+    <!-- New Student Activity-->
+    <string name="newStudentTitle">New student !</string>
+    <string name="newStudentSubtitle">Please fill in his full name</string>
+
+    <!-- Shared -->
+    <string name="confirm">Confirm</string>
 </resources>

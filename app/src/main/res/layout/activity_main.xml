@@ -7,14 +7,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/username"
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/mainActivityTitle"
+        android:textSize="25dp"/>
+
+    <Button
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:hint="nom de l'étudiant" />
-
+        android:layout_height="wrap_content"
+        android:onClick="openScan"
+        android:text="@string/scanButton" />
 
     <Button
         android:layout_marginTop="50dp"
