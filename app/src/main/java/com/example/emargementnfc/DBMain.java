@@ -15,7 +15,7 @@ public class DBMain extends SQLiteOpenHelper {
     private static final String STUDENT_TABLE = "student";
     private static final String EXAMSESSION_TABLE = "examsession";
     private static final String EXAMSESSIONSTUDENT_TABLE = "examsessionstudent";
-    private static final int VER = 2; //numero de version
+    private static final int VER = 3; //numero de version
 
     // student table fields name
     private static final String STUDENT_KEY_ID = "id";
@@ -86,8 +86,6 @@ public class DBMain extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + EXAMSESSIONSTUDENT_TABLE + "");
     }
 
-
-
     ///////Student
     //ajout d'un etudiant
     public long addStudent(Student contact) {
@@ -132,7 +130,6 @@ public class DBMain extends SQLiteOpenHelper {
         long insertId = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        //values.put(EXAMSESSION_KEY_ID, eS.getId());
         values.put(EXAMSESSION_KEY_NAME, eS.getName());
         values.put(EXAMSESSION_KEY_DATE, eS.getDate());
         values.put(EXAMSESSION_KEY_STARTHOUR, eS.getStartHour());

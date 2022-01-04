@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -70,10 +71,15 @@ public class CreateExamSessionActivity extends AppCompatActivity {
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
-                String startTime = minute + ":" + hour;
-                if (minute < 10)
-                    startTime = "0" + startTime;
-                startHourTv.setText(startTime);
+                String fullHour = "" + hour;
+                if (hour < 10)
+                    fullHour = "0" + fullHour;
+
+                String fullMinute = "" + minute;
+                if (hour < 10)
+                    fullMinute = "0" + fullMinute;
+
+                startHourTv.setText(fullHour + ":" + fullMinute);
             }
         };
         TimePickerDialog picker = new TimePickerDialog(this, timeSetListener,  hour, minute, true);
@@ -88,10 +94,15 @@ public class CreateExamSessionActivity extends AppCompatActivity {
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hour, int minute) {
-                String endTime = minute + ":" + hour;
-                if (minute < 10)
-                    endTime = "0" + endTime;
-                endHourTv.setText(endTime);
+                String fullHour = "" + hour;
+                if (hour < 10)
+                    fullHour = "0" + fullHour;
+
+                String fullMinute = "" + minute;
+                if (hour < 10)
+                    fullMinute = "0" + fullMinute;
+
+                endHourTv.setText(fullHour + ":" + fullMinute);
             }
         };
         TimePickerDialog picker = new TimePickerDialog(this, timeSetListener,  hour, minute, true);
@@ -114,10 +125,16 @@ public class CreateExamSessionActivity extends AppCompatActivity {
     }
 
     public void submit(View v) {
-        System.out.println(nameInput.getText());
-        System.out.println(dateTv.getText());
-        System.out.println(startHourTv.getText());
-        System.out.println(endHourTv.getText());
-        this.finish();
+        String name = nameInput.getText().toString();
+        String date = dateTv.getText().toString();
+        String startHour = startHourTv.getText().toString();
+        String endHour = endHourTv.getText().toString();
+
+        if (name.equals("") || date.equals("dd/mm/yyyy") || startHour.equals("hh:mm") || endHour.equals("hh:mm")) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show();
+        } else {
+            this.dbHandler.addExamSession(new ExamSession(name, date, startHour, endHour));
+            this.finish();
+        }
     }
 }

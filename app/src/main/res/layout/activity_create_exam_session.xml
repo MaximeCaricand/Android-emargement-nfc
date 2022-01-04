@@ -80,7 +80,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="20sp"
-            android:text="hh/mm" />
+            android:text="hh:mm" />
 
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="20sp"
-            android:text="hh/mm" />
+            android:text="hh:mm" />
 
     </LinearLayout>
 
