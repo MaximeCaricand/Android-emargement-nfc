@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EmargementNFC</string>
+
+    <!-- Nouvelle Carte activity -->
+    <string name="tvID"> Carte ID: </string>
+    <string name="tvNomPrenom"> Nom et Prénom: </string>
 </resources>
