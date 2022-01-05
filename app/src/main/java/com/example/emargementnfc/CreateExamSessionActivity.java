@@ -76,7 +76,7 @@ public class CreateExamSessionActivity extends AppCompatActivity {
                     fullHour = "0" + fullHour;
 
                 String fullMinute = "" + minute;
-                if (hour < 10)
+                if (minute < 10)
                     fullMinute = "0" + fullMinute;
 
                 startHourTv.setText(fullHour + ":" + fullMinute);
@@ -99,7 +99,7 @@ public class CreateExamSessionActivity extends AppCompatActivity {
                     fullHour = "0" + fullHour;
 
                 String fullMinute = "" + minute;
-                if (hour < 10)
+                if (minute < 10)
                     fullMinute = "0" + fullMinute;
 
                 endHourTv.setText(fullHour + ":" + fullMinute);

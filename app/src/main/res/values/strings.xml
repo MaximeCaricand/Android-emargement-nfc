@@ -15,6 +15,8 @@
     <!-- Exam Session Activity -->
     <string name="examSessionTitle">Exam Session List</string>
     <string name="examSessionCreate">new exam session</string>
+    <string name="pdf">pdf</string>
+    <string name="suppr">suppr</string>
 
     <!-- Create Exam Session Activity -->
     <string name="createExamSessionTitle">Create a new exam session</string>
