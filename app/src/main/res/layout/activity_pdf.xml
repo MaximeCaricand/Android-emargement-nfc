@@ -17,6 +17,7 @@
             android:id="@+id/view_pdf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:layout_weight="90"/>
 
         <LinearLayout

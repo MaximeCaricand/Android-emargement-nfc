@@ -77,23 +77,39 @@ public class PdfActivity extends AppCompatActivity {
 
         Canvas canvas = myPage.getCanvas();
 
+        // Titre 1
         myPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        myPaint.setTextSize(15);
-        myPaint.setColor(ContextCompat.getColor(this, R.color.purple_200));
-
-        canvas.drawText("A portal for IT professionals.", 209, 100, myPaint);
-        canvas.drawText("Geeks for Geeks", 209, 80, myPaint);
-
-        myPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        myPaint.setColor(ContextCompat.getColor(this, R.color.purple_200));
-        myPaint.setTextSize(15);
-
         myPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("This is sample document which we have created.", 396, 560, myPaint);
+        myPaint.setTextSize(20);
+        canvas.drawText("Exam : <nom d'examen>", pagewidth/2, 80, myPaint);
+
+        // Date
+        myPaint.setTextSize(16);
+        canvas.drawText("<date>", pagewidth/2, 100, myPaint);
+
+        // Début et fin
+        myPaint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText("Début : <début d'examen>", 209, 160, myPaint);
+        canvas.drawText("Fin : <fin d'examen>", 209, 180, myPaint);
+
+        // Titre 2
+        myPaint.setTextAlign(Paint.Align.CENTER);
+        myPaint.setTextSize(20);
+        canvas.drawText("Liste des étudiant", pagewidth/2, 240, myPaint);
+
+        // Titres tableau
+        myPaint.setTextAlign(Paint.Align.CENTER);
+        myPaint.setTextSize(14);
+        int margeX = 50;
+        int deltaX = (pagewidth - 2*margeX) / 5;
+        canvas.drawText("Identifiant", margeX+deltaX, 260, myPaint);
+        canvas.drawText("Nom Prénom", margeX+deltaX*2, 260, myPaint);
+        canvas.drawText("Heure d'arrivée", margeX+deltaX*3, 260, myPaint);
+        canvas.drawText("Heure de départ", margeX+deltaX*4, 260, myPaint);
 
         pdfDocument.finishPage(myPage);
 
-        downloadPdf(getApplication().getCacheDir().getPath());
+        downloadPdf(getApplication().getCacheDir().getPath(), false);
     }
 
     public void showPage(int index) {
@@ -107,8 +123,8 @@ public class PdfActivity extends AppCompatActivity {
             rendererPage = renderer.openPage(index);
 
             Bitmap bitmap = Bitmap.createBitmap(
-                rendererPage.getWidth(),
-                rendererPage.getHeight(),
+                pagewidth,
+                pageHeight,
                 Bitmap.Config.ARGB_4444
             );
 
@@ -154,19 +170,22 @@ public class PdfActivity extends AppCompatActivity {
 
 
     public void downloadPdf(View v) {
-        downloadPdf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
+        downloadPdf(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(),
+            true
+        );
     }
 
-    public void downloadPdf(String path) {
+    public void downloadPdf(String path, boolean displayToast) {
         File outDir = new File(path, FILE_NAME);
         try {
             pdfDocument.writeTo(new FileOutputStream(outDir));
-            Toast.makeText(PdfActivity.this, "PDF file generated successfully.", Toast.LENGTH_SHORT).show();
+            if(displayToast)
+                Toast.makeText(PdfActivity.this, "PDF file generated successfully.", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(PdfActivity.this, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA "+ e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-        pdfDocument.close();
     }
 
     private boolean checkPermission() {
