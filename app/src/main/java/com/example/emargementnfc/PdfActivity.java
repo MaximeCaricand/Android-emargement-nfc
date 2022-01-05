@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,8 +65,6 @@ public class PdfActivity extends AppCompatActivity {
 
         //Ajoute les données dans examSession et arListStudents
         retrieveDataForPDF();
-        //Adapte le titre du fichier en fonction de l'exam
-        //FILE_NAME = "emargement_"+examSession.getName()+"_"+examSession.getDate()+".pdf";
 
         createPdf();
         initRenderer();
@@ -125,11 +122,11 @@ public class PdfActivity extends AppCompatActivity {
         // Titre 1
         myPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         myPaint.setTextAlign(Paint.Align.CENTER);
-        myPaint.setTextSize(20);
+        myPaint.setTextSize(24);
         canvas.drawText("Exam : " + examSession.getName(), pagewidth/2, 80, myPaint);
 
         // Date
-        myPaint.setTextSize(16);
+        myPaint.setTextSize(20);
         canvas.drawText(examSession.getDate(), pagewidth/2, 100, myPaint);
 
         // Début et fin
@@ -139,31 +136,31 @@ public class PdfActivity extends AppCompatActivity {
 
         // Titre 2
         myPaint.setTextAlign(Paint.Align.CENTER);
-        myPaint.setTextSize(20);
+        myPaint.setTextSize(24);
         canvas.drawText("Liste des étudiants", pagewidth/2, 240, myPaint);
 
+        // Titres tableau
         int iPage = 0;
         int iEtud = 0;
 
         do {
-
-            // Titres tableau
-            myPaint.setTextAlign(Paint.Align.CENTER);
-            myPaint.setTextSize(14);
-            int margeX = 50;
-            int deltaX = (pagewidth - 2 * margeX) / 5;
+            myPaint.setTextSize(18);
             int deltaY = 260;
             if(iPage > 0) {
                 myPage = pdfDocument.startPage(mypageInfo);
                 canvas = myPage.getCanvas();
                 deltaY = 80;
             }
-            canvas.drawText("Identifiant", margeX + deltaX * 1, deltaY, myPaint);
-            canvas.drawText("Nom Prénom", margeX + deltaX * 2, deltaY, myPaint);
-            canvas.drawText("Heure d'arrivée", margeX + deltaX * 3, deltaY, myPaint);
-            canvas.drawText("Heure de départ", margeX + deltaX * 4, deltaY, myPaint);
+
+            myPaint.setTextAlign(Paint.Align.LEFT);
+            canvas.drawText("Identifiant", 60, deltaY, myPaint);
+            canvas.drawText("Nom Prénom", 250, deltaY, myPaint);
+            myPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("Heure d'arrivée", 500, deltaY, myPaint);
+            canvas.drawText("Heure de départ", 650, deltaY, myPaint);
 
             // Liste des étudiants
+            myPaint.setTextSize(14);
             if (arListStudents.size() > 0) {
                 int iEcart = 0;
                 while(iPage==0 && iEcart<40 || iPage>0 && iEcart<49) {
@@ -177,10 +174,12 @@ public class PdfActivity extends AppCompatActivity {
                         break;
                     String[] tabInfoStudent = arListStudents.get(iEtud);
 
-                    canvas.drawText(tabInfoStudent[0], margeX + deltaX * 1, deltaY, myPaint);
-                    canvas.drawText(tabInfoStudent[1] + iEtud, margeX + deltaX * 2, deltaY, myPaint);
-                    canvas.drawText(tabInfoStudent[2], margeX + deltaX * 3, deltaY, myPaint);
-                    canvas.drawText(tabInfoStudent[3], margeX + deltaX * 4, deltaY, myPaint);
+                    myPaint.setTextAlign(Paint.Align.LEFT);
+                    canvas.drawText(tabInfoStudent[0], 50, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[1] + iEtud, 200, deltaY, myPaint);
+                    myPaint.setTextAlign(Paint.Align.CENTER);
+                    canvas.drawText(tabInfoStudent[2], 500, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[3], 650, deltaY, myPaint);
 
                     iEtud++;
                     iEcart++;
@@ -216,13 +215,14 @@ public class PdfActivity extends AppCompatActivity {
     }
 
     public void next(View v) {
-        System.out.println(pdfPages);
         currentPage = (currentPage + 1) % pdfPages;
         showPage(currentPage);
     }
 
     public void previous(View v) {
-        currentPage = (currentPage - 1) % pdfPages;
+        currentPage = currentPage - 1;
+        if(currentPage < 0)
+            currentPage = pdfPages - 1;
         showPage(currentPage);
     }
 
@@ -269,13 +269,12 @@ public class PdfActivity extends AppCompatActivity {
     private boolean checkPermission() {
         int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         int permission2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        int permission3 = ContextCompat.checkSelfPermission(getApplicationContext(), MANAGE_EXTERNAL_STORAGE);
 
-        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED && permission3 == PackageManager.PERMISSION_GRANTED;
+        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -285,7 +284,6 @@ public class PdfActivity extends AppCompatActivity {
             if (grantResults.length > 0) {
                 boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                boolean manage = grantResults[2] == PackageManager.PERMISSION_GRANTED;
 
                 if (writeStorage && readStorage ) {
                     Toast.makeText(this, "Permission Granted..", Toast.LENGTH_SHORT).show();
