@@ -258,7 +258,6 @@ public class PdfActivity extends AppCompatActivity {
             if(displayToast)
                 Toast.makeText(PdfActivity.this, "PDF file generated successfully.", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(PdfActivity.this, "HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA "+ e, Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
