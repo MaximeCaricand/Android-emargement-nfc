@@ -25,6 +25,10 @@
     <string name="examSessionStartHour">start hour</string>
     <string name="examSessionEndHour">end hour</string>
 
+    <!-- PDF Activity -->
+    <string name="previous">prev</string>
+    <string name="next">next</string>
+    <string name="downloadPDF">Download in pdf format</string>
 
     <!-- Shared -->
     <string name="confirm">Confirm</string>

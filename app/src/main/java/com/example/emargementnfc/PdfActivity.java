@@ -70,9 +70,7 @@ public class PdfActivity extends AppCompatActivity {
         initRenderer();
         showPage(currentPage);
 
-        if (checkPermission()) {
-            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-        } else {
+        if (!checkPermission()) {
             requestPermission();
         }
     }

@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Previous"
+                android:text="@string/previous"
                 android:onClick="previous"/>
 
             <Button
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Next"
+                android:text="@string/next"
                 android:onClick="next"/>
 
         </LinearLayout>
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="downloadPdf"
-            android:text="ce bouton créé un super pdf, vas y clique dessus wouloulou"
+            android:text="@string/downloadPDF"
             android:layout_weight="10"/>
 
     </LinearLayout>

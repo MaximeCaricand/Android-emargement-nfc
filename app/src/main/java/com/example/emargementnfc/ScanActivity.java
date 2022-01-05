@@ -96,6 +96,10 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    public void quit(View view) {
+        this.finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)	{
         super.onActivityResult(requestCode, resultCode, data);
@@ -105,7 +109,7 @@ public class ScanActivity extends AppCompatActivity {
                     String id = data.getStringExtra("id");
                     String name = data.getStringExtra("name");
                     this.dbHandler.addStudent(new Student(id, name));
-                    Toast.makeText(this, "Student created !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Student created ! \n Please pass the badge again", Toast.LENGTH_LONG).show();
                     break;
             }
         }
