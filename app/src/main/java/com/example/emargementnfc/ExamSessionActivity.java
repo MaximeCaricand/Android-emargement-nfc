@@ -119,6 +119,16 @@ public class ExamSessionActivity extends AppCompatActivity {
                 }
             });
 
+            Button pdfButton = view.findViewById(R.id.es_pdf);
+            pdfButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Intent pdfIntent = new Intent(this, ScanActivity.class);
+                    //pdfIntent.putExtra("examID", currentItem.getId());
+                    //startActivity(pdfIntent);
+                }
+            });
+
             return view;
         }
     }
