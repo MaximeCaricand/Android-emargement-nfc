@@ -154,7 +154,7 @@ public class PdfActivity extends AppCompatActivity {
 
             myPaint.setTextAlign(Paint.Align.LEFT);
             canvas.drawText("Identifiant", 60, deltaY, myPaint);
-            canvas.drawText("Nom Prénom", 250, deltaY, myPaint);
+            canvas.drawText("Nom Prénom", 210, deltaY, myPaint);
             myPaint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText("Heure d'arrivée", 500, deltaY, myPaint);
             canvas.drawText("Heure de départ", 650, deltaY, myPaint);
