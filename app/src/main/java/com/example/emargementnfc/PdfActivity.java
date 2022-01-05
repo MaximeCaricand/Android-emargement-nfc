@@ -11,15 +11,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.pdf.PdfDocument;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,9 +29,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.zip.Inflater;
 
 public class PdfActivity extends AppCompatActivity {
 
@@ -53,6 +47,7 @@ public class PdfActivity extends AppCompatActivity {
 
     private PdfRenderer renderer;
     private PdfRenderer.Page rendererPage;
+    private int pdfPages;
 
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final String FILE_NAME = "monsuperpdf.pdf";
@@ -75,12 +70,23 @@ public class PdfActivity extends AppCompatActivity {
         //FILE_NAME = "emargement_"+examSession.getName()+"_"+examSession.getDate()+".pdf";
 
         createPdf();
+        initRenderer();
         showPage(currentPage);
 
         if (checkPermission()) {
             Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
         } else {
             requestPermission();
+        }
+    }
+
+    private void initRenderer() {
+        try {
+            renderer = new PdfRenderer(ParcelFileDescriptor.open(
+                readFile(), ParcelFileDescriptor.MODE_READ_ONLY
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -93,6 +99,7 @@ public class PdfActivity extends AppCompatActivity {
         ArrayList<ExamSessionStudent> arExamSessionStudent = this.dbHandler.getAllStudentInExamSession(examID);
         arListStudents = new ArrayList<>();
 
+        for(int i=0; i<500; i++) //// A retirer !!
         for (ExamSessionStudent ess : arExamSessionStudent) {
 
             String[] tabStudent = {
@@ -103,20 +110,7 @@ public class PdfActivity extends AppCompatActivity {
             };
 
             arListStudents.add(tabStudent);
-
-            System.out.println("KKKKKKKKKKKKKKKKKKKKKKK");
-            System.out.println(arListStudents.size());
-            System.out.println(tabStudent[0]);
-            System.out.println(tabStudent[1]);
-            System.out.println(tabStudent[2]);
-            System.out.println(tabStudent[3]);
-
         }
-
-        System.out.println("KKKKKKKKKKKKKKKKKKKKKKK " + examID);
-        System.out.println(arExamSessionStudent.size());
-
-
     }
 
     public void createPdf() {
@@ -148,42 +142,61 @@ public class PdfActivity extends AppCompatActivity {
         myPaint.setTextSize(20);
         canvas.drawText("Liste des étudiants", pagewidth/2, 240, myPaint);
 
-        // Titres tableau
-        myPaint.setTextAlign(Paint.Align.CENTER);
-        myPaint.setTextSize(14);
-        int margeX = 50;
-        int deltaX = (pagewidth - 2*margeX) / 5;
-        canvas.drawText("Identifiant"    , margeX+deltaX*1, 260, myPaint);
-        canvas.drawText("Nom Prénom"     , margeX+deltaX*2, 260, myPaint);
-        canvas.drawText("Heure d'arrivée", margeX+deltaX*3, 260, myPaint);
-        canvas.drawText("Heure de départ", margeX+deltaX*4, 260, myPaint);
+        int iPage = 0;
+        int iEtud = 0;
 
-        // Liste des étudiants
-        if (arListStudents.size() > 0) {
-            int deltaY = 20;
-            for (int iEcart = 0; iEcart < arListStudents.size(); iEcart++) {
-                String[] tabInfoStudent = arListStudents.get(iEcart);
+        do {
 
-                canvas.drawText(tabInfoStudent[0], margeX + deltaX * 1, 270 + deltaY * (iEcart + 1), myPaint);
-                canvas.drawText(tabInfoStudent[1], margeX + deltaX * 2, 270 + deltaY * (iEcart + 1), myPaint);
-                canvas.drawText(tabInfoStudent[2], margeX + deltaX * 3, 270 + deltaY * (iEcart + 1), myPaint);
-                canvas.drawText(tabInfoStudent[3], margeX + deltaX * 4, 270 + deltaY * (iEcart + 1), myPaint);
+            // Titres tableau
+            myPaint.setTextAlign(Paint.Align.CENTER);
+            myPaint.setTextSize(14);
+            int margeX = 50;
+            int deltaX = (pagewidth - 2 * margeX) / 5;
+            int deltaY = 260;
+            if(iPage > 0) {
+                myPage = pdfDocument.startPage(mypageInfo);
+                canvas = myPage.getCanvas();
+                deltaY = 80;
             }
-        }
+            canvas.drawText("Identifiant", margeX + deltaX * 1, deltaY, myPaint);
+            canvas.drawText("Nom Prénom", margeX + deltaX * 2, deltaY, myPaint);
+            canvas.drawText("Heure d'arrivée", margeX + deltaX * 3, deltaY, myPaint);
+            canvas.drawText("Heure de départ", margeX + deltaX * 4, deltaY, myPaint);
 
-        pdfDocument.finishPage(myPage);
+            // Liste des étudiants
+            if (arListStudents.size() > 0) {
+                int iEcart = 0;
+                while(iPage==0 && iEcart<40 || iPage>0 && iEcart<49) {
+
+                    deltaY = 290;
+                    if(iPage > 0)
+                        deltaY = 110;
+                    deltaY = deltaY + iEcart * 20;
+
+                    if(iEtud >= arListStudents.size())
+                        break;
+                    String[] tabInfoStudent = arListStudents.get(iEtud);
+
+                    canvas.drawText(tabInfoStudent[0], margeX + deltaX * 1, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[1] + iEtud, margeX + deltaX * 2, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[2], margeX + deltaX * 3, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[3], margeX + deltaX * 4, deltaY, myPaint);
+
+                    iEtud++;
+                    iEcart++;
+                }
+            }
+
+            pdfDocument.finishPage(myPage);
+            iPage++;
+
+        } while(iEtud < arListStudents.size());
 
         downloadPdf(getApplication().getCacheDir().getPath(), false);
     }
 
     public void showPage(int index) {
         try {
-            renderer = new PdfRenderer(ParcelFileDescriptor.open(
-                readFile(), ParcelFileDescriptor.MODE_READ_ONLY
-            ));
-            if (null != rendererPage) {
-                rendererPage.close();
-            }
             rendererPage = renderer.openPage(index);
 
             Bitmap bitmap = Bitmap.createBitmap(
@@ -192,10 +205,10 @@ public class PdfActivity extends AppCompatActivity {
                 Bitmap.Config.ARGB_4444
             );
 
+            pdfPages = renderer.getPageCount();
             view_pdf.setImageBitmap(bitmap);
             rendererPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             rendererPage.close();
-            renderer.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,12 +216,13 @@ public class PdfActivity extends AppCompatActivity {
     }
 
     public void next(View v) {
-        currentPage = (currentPage + 1) % renderer.getPageCount();
+        System.out.println(pdfPages);
+        currentPage = (currentPage + 1) % pdfPages;
         showPage(currentPage);
     }
 
     public void previous(View v) {
-        currentPage = (currentPage - 1) % renderer.getPageCount();
+        currentPage = (currentPage - 1) % pdfPages;
         showPage(currentPage);
     }
 
