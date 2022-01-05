@@ -96,7 +96,6 @@ public class PdfActivity extends AppCompatActivity {
         ArrayList<ExamSessionStudent> arExamSessionStudent = this.dbHandler.getAllStudentInExamSession(examID);
         arListStudents = new ArrayList<>();
 
-        for(int i=0; i<500; i++) //// A retirer !!
         for (ExamSessionStudent ess : arExamSessionStudent) {
 
             String[] tabStudent = {
@@ -176,7 +175,7 @@ public class PdfActivity extends AppCompatActivity {
 
                     myPaint.setTextAlign(Paint.Align.LEFT);
                     canvas.drawText(tabInfoStudent[0], 50, deltaY, myPaint);
-                    canvas.drawText(tabInfoStudent[1] + iEtud, 200, deltaY, myPaint);
+                    canvas.drawText(tabInfoStudent[1], 200, deltaY, myPaint);
                     myPaint.setTextAlign(Paint.Align.CENTER);
                     canvas.drawText(tabInfoStudent[2], 500, deltaY, myPaint);
                     canvas.drawText(tabInfoStudent[3], 650, deltaY, myPaint);
