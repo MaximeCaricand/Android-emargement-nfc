@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 
 public class ScanActivity extends AppCompatActivity {
 
@@ -73,9 +74,22 @@ public class ScanActivity extends AppCompatActivity {
     private void getTagInfo(Intent intent) {
         String uid = new BigInteger(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)).toString(16);
         Student student = this.dbHandler.getStudent(uid);
-        if (student != null)
+        if (student != null) {
             Toast.makeText(this, "Student: " + student.getName(), Toast.LENGTH_LONG).show();
-        else {
+            final Calendar c = Calendar.getInstance();
+            String formatedDate = formatDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+            String formatedHour = formatHour(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+            ExamSession currentExamSession = this.dbHandler.getExamSession(formatedDate, formatedHour);
+            if (currentExamSession != null){
+                if(this.dbHandler.getExamSessionStudent(currentExamSession.getId(), student.getId()) != null) {
+                    // update
+                    this.dbHandler.updateStudentExamSession(currentExamSession.getId(), student.getId(), formatedHour);
+                } else {
+                    // add
+                    this.dbHandler.addExamSessionStudent(new ExamSessionStudent(currentExamSession.getId(), student.getId(), formatedHour));
+                }
+            }
+        } else {
             Intent highscoresIntent = new Intent(this, NewStudentActivity.class);
             highscoresIntent.putExtra("id", uid);
             startActivityForResult(highscoresIntent, NEW_STUDENT_CODE);
@@ -95,5 +109,29 @@ public class ScanActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private static String formatDate(int year, int month, int day) {
+        String fullMonth = "" + (month + 1);
+        if (month < 10)
+            fullMonth = "0" + fullMonth;
+
+        String fullDay = "" + day;
+        if (day < 10)
+            fullDay = "0" + fullDay;
+
+        return fullDay + "/" + fullMonth + "/" + year;
+    }
+
+    private static String formatHour(int hour, int minute) {
+        String fullHour = "" + hour;
+        if (hour < 10)
+            fullHour = "0" + fullHour;
+
+        String fullMinute = "" + minute;
+        if (minute < 10)
+            fullMinute = "0" + fullMinute;
+
+        return fullHour + ":" + fullMinute;
     }
 }

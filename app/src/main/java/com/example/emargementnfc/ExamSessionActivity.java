@@ -58,6 +58,7 @@ public class ExamSessionActivity extends AppCompatActivity {
             switch (requestCode) {
                 case CREATE_CODE:
                     this.updateListView();
+                    Toast.makeText(this, "Create success", Toast.LENGTH_LONG).show();
                     break;
             }
         }

@@ -6,6 +6,7 @@ import androidx.fragment.app.DialogFragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -134,6 +135,8 @@ public class CreateExamSessionActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show();
         } else {
             this.dbHandler.addExamSession(new ExamSession(name, date, startHour, endHour));
+            Intent returnContent = new Intent();
+            setResult(RESULT_OK, returnContent);
             this.finish();
         }
     }
