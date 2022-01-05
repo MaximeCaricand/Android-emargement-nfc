@@ -46,6 +46,12 @@ public class ExamSessionActivity extends AppCompatActivity {
         Toast.makeText(this, "Delete success", Toast.LENGTH_LONG).show();
     }
 
+    public void openPdfActivity(int examID) {
+        Intent pdfIntent = new Intent(this, PdfActivity.class);
+        pdfIntent.putExtra("examID", examID);
+        startActivity(pdfIntent);
+    }
+
     public void createNewExamSession(View view) {
         Intent settingsIntent = new Intent(this, CreateExamSessionActivity.class);
         startActivityForResult(settingsIntent, CREATE_CODE);
@@ -123,9 +129,7 @@ public class ExamSessionActivity extends AppCompatActivity {
             pdfButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Intent pdfIntent = new Intent(this, ScanActivity.class);
-                    //pdfIntent.putExtra("examID", currentItem.getId());
-                    //startActivity(pdfIntent);
+                    openPdfActivity(currentItem.getId());
                 }
             });
 

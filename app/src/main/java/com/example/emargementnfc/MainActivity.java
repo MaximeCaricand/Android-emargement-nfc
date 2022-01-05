@@ -25,10 +25,6 @@ public class MainActivity extends AppCompatActivity {
         Intent settingsIntent = new Intent(this, ExamSessionActivity.class);
         startActivity(settingsIntent);
     }
-     public void pdf(View v){
-        Intent pdfIntent = new Intent(MainActivity.this, PdfActivity.class);
-        startActivity(pdfIntent);
-    }
 
     public void clearDB(View view) {
         this.dbHandler.clearTable();

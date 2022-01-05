@@ -37,11 +37,4 @@
         android:text="clear DB"
         android:textFontWeight="100" />
 
-    <Button
-        android:id="@+id/getPdf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="pdf"
-        android:text="Import an exam" />
-
 </LinearLayout>
