@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="downloadPdf"
-            android:text="ce bouton créé un super pdf, vas y clique dessus wouloulou"
+            android:text="download"
             android:layout_weight="10"/>
 
     </LinearLayout>
