@@ -7,6 +7,10 @@ public class ExamSession {
     private String startHour;
     private String endHour;
 
+    ExamSession(String name, String date, String startHour, String endHour) {
+        this(-1, name, date, startHour, endHour);
+    }
+
     ExamSession(int id, String name, String date, String startHour, String endHour) {
         this.id = id;
         this.name = name;
@@ -17,20 +21,7 @@ public class ExamSession {
 
     public int getId() { return this.id; }
     public String getName() { return this.name; }
-    public String getDate() {
-        //SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY");
-        //String s = sdf.format(this.date);
-        return this.date;
-    }
-    public String getStartHour() {
-        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        //String s = sdf.format(this.startHour);
-        return this.startHour;
-    }
-    public String getEndHour() {
-        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        //String s = sdf.format(this.endHour);
-        return this.endHour;
-    }
-
+    public String getDate() { return this.date; }
+    public String getStartHour() { return this.startHour; }
+    public String getEndHour() { return this.endHour; }
 }

@@ -3,6 +3,7 @@
     <!-- Main Activity -->
     <string name="mainActivityTitle">!! Awesome NFC scan app !!</string>
     <string name="scanButton">SCAN</string>
+    <string name="examSessionButton">Exam Sessions</string>
 
     <!-- Scan Activity -->
     <string name="scanActivityScan">SCAN</string>
@@ -11,6 +12,21 @@
     <string name="newStudentTitle">New student !</string>
     <string name="newStudentSubtitle">Please fill in his full name</string>
 
+    <!-- Exam Session Activity -->
+    <string name="examSessionTitle">Exam Session List</string>
+    <string name="examSessionCreate">new exam session</string>
+    <string name="pdf">pdf</string>
+    <string name="suppr">suppr</string>
+
+    <!-- Create Exam Session Activity -->
+    <string name="createExamSessionTitle">Create a new exam session</string>
+    <string name="examSessionName">name</string>
+    <string name="examSessionDate">date</string>
+    <string name="examSessionStartHour">start hour</string>
+    <string name="examSessionEndHour">end hour</string>
+
+
     <!-- Shared -->
     <string name="confirm">Confirm</string>
+    <string name="quit">Quit</string>
 </resources>

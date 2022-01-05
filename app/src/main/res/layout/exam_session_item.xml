@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/es_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Exam Session A"
+            android:textSize="20dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/es_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dd/mm/yyyy"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/es_name"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/es_startDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="5dp"
+            android:text="hh:mm"
+            android:layout_below="@id/es_date"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/es_endDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="hh:mm"
+            android:layout_below="@id/es_date"
+            android:layout_toRightOf="@id/es_startDate"
+            android:textSize="20dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp">
+
+        <Button
+            android:id="@+id/es_pdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pdf"/>
+
+        <Button
+            android:id="@+id/es_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/suppr"
+            android:layout_below="@id/es_pdf"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

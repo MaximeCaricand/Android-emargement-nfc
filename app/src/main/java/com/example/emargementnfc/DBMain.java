@@ -9,13 +9,15 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class DBMain extends SQLiteOpenHelper {
 
     private static final String DBNAME = "emargementnfc";
     private static final String STUDENT_TABLE = "student";
     private static final String EXAMSESSION_TABLE = "examsession";
     private static final String EXAMSESSIONSTUDENT_TABLE = "examsessionstudent";
-    private static final int VER = 2; //numero de version
+    private static final int VER = 3; //numero de version
 
     // student table fields name
     private static final String STUDENT_KEY_ID = "id";
@@ -86,8 +88,6 @@ public class DBMain extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + EXAMSESSIONSTUDENT_TABLE + "");
     }
 
-
-
     ///////Student
     //ajout d'un etudiant
     public long addStudent(Student contact) {
@@ -132,7 +132,6 @@ public class DBMain extends SQLiteOpenHelper {
         long insertId = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        //values.put(EXAMSESSION_KEY_ID, eS.getId());
         values.put(EXAMSESSION_KEY_NAME, eS.getName());
         values.put(EXAMSESSION_KEY_DATE, eS.getDate());
         values.put(EXAMSESSION_KEY_STARTHOUR, eS.getStartHour());
@@ -145,18 +144,21 @@ public class DBMain extends SQLiteOpenHelper {
     }
 
     //récupérer tous les ids des exams
-    public ExamSession getAllExamSession() {
+    public ArrayList<ExamSession> getAllExamSession() {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(EXAMSESSION_TABLE,
                 new String[] {EXAMSESSION_KEY_ID, EXAMSESSION_KEY_NAME, EXAMSESSION_KEY_DATE, EXAMSESSION_KEY_STARTHOUR, EXAMSESSION_KEY_ENDHOUR},
                 null, null, null, null, null, null);
 
-        ExamSession eS = null;
+        ArrayList<ExamSession> eS = new ArrayList<>();
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            eS = new ExamSession(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            while (cursor.isAfterLast() == false) {
+                eS.add(new ExamSession(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+                cursor.moveToNext();
+            }
         }
 
         cursor.close();
@@ -185,6 +187,36 @@ public class DBMain extends SQLiteOpenHelper {
         return eS;
     }
 
+    //recuperer tous les ids des exams
+    public ArrayList<Integer> getAllExamSessionID() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(EXAMSESSION_TABLE,
+                new String[] {EXAMSESSION_KEY_ID},
+                null, null, null, null, null, null);
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (cursor.isAfterLast() == false) {
+                ids.add(cursor.getInt(0));
+                cursor.moveToNext();
+            }
+        }
+
+        cursor.close();
+        db.close();
+        return ids;
+    }
+
+    //supprimer un exam
+    public void deleteExamSession(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(EXAMSESSION_TABLE, EXAMSESSION_KEY_ID + "=?", new String[]{"" + id});
+        db.close();
+    }
+
 
 
     ///////Student Exam Session
@@ -204,8 +236,8 @@ public class DBMain extends SQLiteOpenHelper {
         return insertId;
     }
 
-    //récupérer un relation précis
-    public ExamSessionStudent getStudentExamSession(String id_examsession) {
+    //récupérer tous les étudiants présents dans un examsession
+    public ArrayList<ExamSessionStudent> getAllStudentInExamSession(String id_examsession) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(EXAMSESSIONSTUDENT_TABLE,
@@ -213,13 +245,15 @@ public class DBMain extends SQLiteOpenHelper {
                 EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION + "=?",
                 new String[] {String.valueOf(id_examsession)}, null, null, null, null);
 
-        ExamSessionStudent eSS = null;
+        ArrayList<ExamSessionStudent> eSS = new ArrayList<>();
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            eSS = new ExamSessionStudent(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3));
+            while (cursor.isAfterLast() == false) {
+                eSS.add(new ExamSessionStudent(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3)));
+                cursor.moveToNext();
+            }
         }
-
         cursor.close();
         db.close();
         return eSS;
