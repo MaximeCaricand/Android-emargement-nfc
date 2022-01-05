@@ -22,8 +22,8 @@ public class DBMain extends SQLiteOpenHelper {
     // student table fields name
     private static final String STUDENT_KEY_ID = "id";
     private static final String STUDENT_KEY_NAME = "name";
-    private String createStudent = "CREATE TABLE " + STUDENT_TABLE +
-            "(" + STUDENT_KEY_ID + " TEXT PRIMARY KEY,"
+    private String createStudent   = "CREATE TABLE " + STUDENT_TABLE +
+            "(" + STUDENT_KEY_ID   + " TEXT PRIMARY KEY,"
                 + STUDENT_KEY_NAME + " TEXT"+
             ")";
 
@@ -34,11 +34,11 @@ public class DBMain extends SQLiteOpenHelper {
     private static final String EXAMSESSION_KEY_STARTHOUR = "starthour";
     private static final String EXAMSESSION_KEY_ENDHOUR = "endhour";
     private String createExamSession = "CREATE TABLE " + EXAMSESSION_TABLE +
-            "(" + EXAMSESSION_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
-                + EXAMSESSION_KEY_NAME + " TEXT,"
-                + EXAMSESSION_KEY_DATE + " TEXT,"
-                + EXAMSESSION_KEY_STARTHOUR +" TEXT,"
-                + EXAMSESSION_KEY_ENDHOUR + " TEXT" +
+            "(" + EXAMSESSION_KEY_ID        + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                + EXAMSESSION_KEY_NAME      + " TEXT,"
+                + EXAMSESSION_KEY_DATE      + " TEXT,"
+                + EXAMSESSION_KEY_STARTHOUR + " TEXT,"
+                + EXAMSESSION_KEY_ENDHOUR   + " TEXT" +
             ")";
 
     // exam session student fields name (associative table)
@@ -47,11 +47,11 @@ public class DBMain extends SQLiteOpenHelper {
     private static final String EXAMSESSIONSTUDENT_KEY_ARRIVEHOUR = "arrivehour";
     private static final String EXAMSESSIONSTUDENT_KEY_QUITHOUR = "quithour";
     private String createExamSessionStudent = "CREATE TABLE " + EXAMSESSIONSTUDENT_TABLE +
-            "(" + EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION + " INTEGER,"
-            + EXAMSESSIONSTUDENT_KEY_ID_STUDENT + " TEXT,"
-            + EXAMSESSIONSTUDENT_KEY_ARRIVEHOUR +" TEXT,"
-            + EXAMSESSIONSTUDENT_KEY_QUITHOUR + " TEXT,"
-            + "PRIMARY KEY (" + EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION + ", " + EXAMSESSIONSTUDENT_KEY_ID_STUDENT + ")" +
+            "(" + EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION       + " INTEGER,"
+                + EXAMSESSIONSTUDENT_KEY_ID_STUDENT           + " TEXT,"
+                + EXAMSESSIONSTUDENT_KEY_ARRIVEHOUR           + " TEXT,"
+                + EXAMSESSIONSTUDENT_KEY_QUITHOUR             + " TEXT,"
+                + "PRIMARY KEY (" + EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION + ", " + EXAMSESSIONSTUDENT_KEY_ID_STUDENT + ")" +
             ")";
 
     public DBMain(@Nullable Context context) {
@@ -76,7 +76,6 @@ public class DBMain extends SQLiteOpenHelper {
         createTable(db);
         db.close();
     }
-
     private void createTable(SQLiteDatabase db) {
         db.execSQL(createStudent);
         db.execSQL(createExamSession);
@@ -88,7 +87,11 @@ public class DBMain extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + EXAMSESSIONSTUDENT_TABLE + "");
     }
 
-    ///////Student
+
+
+    /************************************/
+    /*****         STUDENT          *****/
+    /************************************/
     //ajout d'un etudiant
     public long addStudent(Student contact) {
         long insertId = -1;
@@ -125,8 +128,9 @@ public class DBMain extends SQLiteOpenHelper {
     }
 
 
-
-    ///////Exam Session
+    /************************************/
+    /*****       EXAM SESSION       *****/
+    /************************************/
     //ajout d'un exam
     public long addExamSession(ExamSession eS){
         long insertId = -1;
@@ -143,7 +147,7 @@ public class DBMain extends SQLiteOpenHelper {
         return insertId;
     }
 
-    //récupérer tous les ids des exams
+    //recuperer tous les exams
     public ArrayList<ExamSession> getAllExamSession() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -166,13 +170,14 @@ public class DBMain extends SQLiteOpenHelper {
         return eS;
     }
 
-    public ExamSession getExamSession(String date, String heure) {
+    //récupérer un exam précis par date et heureDebut
+    public ExamSession getExamSession(String date, String heureDebut) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(EXAMSESSION_TABLE,
                 new String[] {EXAMSESSION_KEY_ID, EXAMSESSION_KEY_NAME, EXAMSESSION_KEY_DATE, EXAMSESSION_KEY_STARTHOUR, EXAMSESSION_KEY_ENDHOUR},
-                EXAMSESSION_KEY_DATE + "=? and "+EXAMSESSION_KEY_STARTHOUR+"<? and "+EXAMSESSION_KEY_ENDHOUR+">?",
-                new String[] {date, heure, heure}, null, null, null, null);
+                EXAMSESSION_KEY_DATE + "=? and "+EXAMSESSION_KEY_STARTHOUR+"<=? and "+EXAMSESSION_KEY_ENDHOUR+">=?",
+                new String[] {date, heureDebut, heureDebut}, null, null, null, null);
 
         ExamSession eS = null;
 
@@ -186,8 +191,8 @@ public class DBMain extends SQLiteOpenHelper {
         return eS;
     }
 
-    //récupérer un exam précis
-    public ExamSession getExamSessionByID(String id) {
+    //récupérer un exam précis par ID
+    public ExamSession getExamSessionByID(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(EXAMSESSION_TABLE,
@@ -207,29 +212,6 @@ public class DBMain extends SQLiteOpenHelper {
         return eS;
     }
 
-    //recuperer tous les ids des exams
-    public ArrayList<Integer> getAllExamSessionID() {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(EXAMSESSION_TABLE,
-                new String[] {EXAMSESSION_KEY_ID},
-                null, null, null, null, null, null);
-
-        ArrayList<Integer> ids = new ArrayList<>();
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            while (cursor.isAfterLast() == false) {
-                ids.add(cursor.getInt(0));
-                cursor.moveToNext();
-            }
-        }
-
-        cursor.close();
-        db.close();
-        return ids;
-    }
-
     //supprimer un exam
     public void deleteExamSession(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -238,25 +220,11 @@ public class DBMain extends SQLiteOpenHelper {
     }
 
 
-
-    ///////Student Exam Session
-    public long addExamSessionStudent(ExamSessionStudent eSS){
-        long insertId = -1;
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION, eSS.getIdExamsession());
-        values.put(EXAMSESSIONSTUDENT_KEY_ID_STUDENT, eSS.getIdStudent());
-        values.put(EXAMSESSIONSTUDENT_KEY_ARRIVEHOUR, eSS.getArriveHour());
-        values.put(EXAMSESSIONSTUDENT_KEY_QUITHOUR, eSS.getQuitHour());
-
-        // Inserting Row
-        insertId = db.insert(EXAMSESSIONSTUDENT_TABLE, null, values);
-        db.close(); // Closing database connection
-        return insertId;
-    }
-
+    /************************************/
+    /*****   EXAM SESSION STUDENT   *****/
+    /************************************/
     //récupérer tous les étudiants présents dans un examsession
-    public ArrayList<ExamSessionStudent> getAllStudentInExamSession(String id_examsession) {
+    public ArrayList<ExamSessionStudent> getAllStudentInExamSession(int id_examsession) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(EXAMSESSIONSTUDENT_TABLE,
@@ -298,7 +266,21 @@ public class DBMain extends SQLiteOpenHelper {
         db.close();
         return ess;
     }
+    //cree la relation student exam session
+    public long addExamSessionStudent(ExamSessionStudent eSS){
+        long insertId = -1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(EXAMSESSIONSTUDENT_KEY_ID_EXAMSESSION, eSS.getIdExamsession());
+        values.put(EXAMSESSIONSTUDENT_KEY_ID_STUDENT, eSS.getIdStudent());
+        values.put(EXAMSESSIONSTUDENT_KEY_ARRIVEHOUR, eSS.getArriveHour());
+        values.put(EXAMSESSIONSTUDENT_KEY_QUITHOUR, eSS.getQuitHour());
 
+        // Inserting Row
+        insertId = db.insert(EXAMSESSIONSTUDENT_TABLE, null, values);
+        db.close(); // Closing database connection
+        return insertId;
+    }
     //update de la relation student exam session
     public long updateStudentExamSession(int id_examsession, String id_student, String heure){
         long updateQuitHour = -1;

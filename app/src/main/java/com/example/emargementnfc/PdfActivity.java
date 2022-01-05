@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.Inflater;
@@ -39,6 +41,11 @@ public class PdfActivity extends AppCompatActivity {
     int pageHeight = 1120;
     int pagewidth = 792;
     int currentPage = 0;
+
+    DBMain dbHandler;
+    public int examID;
+    public ExamSession examSession; //Info concernant l'exam actuel
+    public ArrayList<String[]> arListStudents; //Liste de tous les étudiants présents pendant l'exam
 
     private PdfDocument pdfDocument;
     private ImageView view_pdf;
@@ -55,8 +62,17 @@ public class PdfActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
 
-        view_pdf = findViewById(R.id.view_pdf);
+        Intent i = getIntent();
+        examID   = i.getIntExtra("examID", -1);
+        this.dbHandler = new DBMain(getApplicationContext());
+
+        view_pdf     = findViewById(R.id.view_pdf);
         btn_generate = findViewById(R.id.pdf);
+
+        //Ajoute les données dans examSession et arListStudents
+        retrieveDataForPDF();
+        //Adapte le titre du fichier en fonction de l'exam
+        //FILE_NAME = "emargement_"+examSession.getName()+"_"+examSession.getDate()+".pdf";
 
         createPdf();
         showPage(currentPage);
@@ -68,12 +84,47 @@ public class PdfActivity extends AppCompatActivity {
         }
     }
 
+    //recuperer toutes les informations présentent dans la base nécessaire à l'affichage
+    public void retrieveDataForPDF() {
+        //Info session
+        examSession = this.dbHandler.getExamSessionByID(examID);
+
+        //Info student + hour
+        ArrayList<ExamSessionStudent> arExamSessionStudent = this.dbHandler.getAllStudentInExamSession(examID);
+        arListStudents = new ArrayList<>();
+
+        for (ExamSessionStudent ess : arExamSessionStudent) {
+
+            String[] tabStudent = {
+                ess.getIdStudent(),  //ID
+                this.dbHandler.getStudent(ess.getIdStudent()).getName(), //name
+                ess.getArriveHour(), //arriveHour
+                ess.getQuitHour()    //quitHour
+            };
+
+            arListStudents.add(tabStudent);
+
+            System.out.println("KKKKKKKKKKKKKKKKKKKKKKK");
+            System.out.println(arListStudents.size());
+            System.out.println(tabStudent[0]);
+            System.out.println(tabStudent[1]);
+            System.out.println(tabStudent[2]);
+            System.out.println(tabStudent[3]);
+
+        }
+
+        System.out.println("KKKKKKKKKKKKKKKKKKKKKKK " + examID);
+        System.out.println(arExamSessionStudent.size());
+
+
+    }
+
     public void createPdf() {
-        pdfDocument = new PdfDocument();
+        pdfDocument   = new PdfDocument();
         Paint myPaint = new Paint();
 
         PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(pagewidth, pageHeight, 1).create();
-        PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
+        PdfDocument.Page     myPage     = pdfDocument.startPage(mypageInfo);
 
         Canvas canvas = myPage.getCanvas();
 
@@ -81,31 +132,44 @@ public class PdfActivity extends AppCompatActivity {
         myPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         myPaint.setTextAlign(Paint.Align.CENTER);
         myPaint.setTextSize(20);
-        canvas.drawText("Exam : <nom d'examen>", pagewidth/2, 80, myPaint);
+        canvas.drawText("Exam : " + examSession.getName(), pagewidth/2, 80, myPaint);
 
         // Date
         myPaint.setTextSize(16);
-        canvas.drawText("<date>", pagewidth/2, 100, myPaint);
+        canvas.drawText(examSession.getDate(), pagewidth/2, 100, myPaint);
 
         // Début et fin
         myPaint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("Début : <début d'examen>", 209, 160, myPaint);
-        canvas.drawText("Fin : <fin d'examen>", 209, 180, myPaint);
+        canvas.drawText("Début : " + examSession.getStartHour(), 209, 160, myPaint);
+        canvas.drawText("Fin   : " + examSession.getEndHour()  , 209, 180, myPaint);
 
         // Titre 2
         myPaint.setTextAlign(Paint.Align.CENTER);
         myPaint.setTextSize(20);
-        canvas.drawText("Liste des étudiant", pagewidth/2, 240, myPaint);
+        canvas.drawText("Liste des étudiants", pagewidth/2, 240, myPaint);
 
         // Titres tableau
         myPaint.setTextAlign(Paint.Align.CENTER);
         myPaint.setTextSize(14);
         int margeX = 50;
         int deltaX = (pagewidth - 2*margeX) / 5;
-        canvas.drawText("Identifiant", margeX+deltaX, 260, myPaint);
-        canvas.drawText("Nom Prénom", margeX+deltaX*2, 260, myPaint);
+        canvas.drawText("Identifiant"    , margeX+deltaX*1, 260, myPaint);
+        canvas.drawText("Nom Prénom"     , margeX+deltaX*2, 260, myPaint);
         canvas.drawText("Heure d'arrivée", margeX+deltaX*3, 260, myPaint);
         canvas.drawText("Heure de départ", margeX+deltaX*4, 260, myPaint);
+
+        // Liste des étudiants
+        if (arListStudents.size() > 0) {
+            int deltaY = 20;
+            for (int iEcart = 0; iEcart < arListStudents.size(); iEcart++) {
+                String[] tabInfoStudent = arListStudents.get(iEcart);
+
+                canvas.drawText(tabInfoStudent[0], margeX + deltaX * 1, 270 + deltaY * (iEcart + 1), myPaint);
+                canvas.drawText(tabInfoStudent[1], margeX + deltaX * 2, 270 + deltaY * (iEcart + 1), myPaint);
+                canvas.drawText(tabInfoStudent[2], margeX + deltaX * 3, 270 + deltaY * (iEcart + 1), myPaint);
+                canvas.drawText(tabInfoStudent[3], margeX + deltaX * 4, 270 + deltaY * (iEcart + 1), myPaint);
+            }
+        }
 
         pdfDocument.finishPage(myPage);
 
